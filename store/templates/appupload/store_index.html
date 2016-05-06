@@ -1,0 +1,343 @@
+{% extends "base/base.html" %}
+{% load store_templatetags %}
+{% block content %}
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- 导航 -->
+            {% include "sysBase/navbar_custom_menu.html" %}
+        </header>
+        <!-- 左侧菜单  -->
+        {% include "sysBase/left_index.html" %}
+
+
+        <!-- 内容部分 -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    上传APP
+                    <small>增加商城内的APP</small>
+                </h1>
+{#                <ol class="breadcrumb">#}
+{#                    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>#}
+{#                    <li class="active">节目源</li>#}
+{#                </ol>#}
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-header">
+                                <div class="box-tools">
+                                    <div class="input-group">
+                                        <input type="text" id="search" name="table_search" class="form-control input-sm pull-right" style="width: 150px;" placeholder="Search"/>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default btn-sm" onclick="search_name()"><i class="fa fa-search"></i>查询</button>
+											<button class="btn btn-primary btn-sm" id="show_add_data" type="button"><li style="color:#ffffff;" class="glyphicon glyphicon-plus"></li>&nbsp;新增APP信息</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table" style="width:200px; margin: 0px">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td style="padding:5px 0px 5px 5px">
+                                        <div class="dropdown">
+                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                                全部分组
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/Shop/Store_index/">显示所有</a></li>
+                                                {% for row in classinfo %}
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/Shop/Store_index/?classid={{ row.classid }}">{{ row.classname }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </td>
+									<td style="padding:5px 0px 5px 5px"><button type="button" class="btn btn-default btn-sm" onclick="del_batch('/Shop/delapk')"><li class="glyphicon glyphicon-trash"></li>&nbsp;批量删除</button></td>
+
+                                </tr>
+
+
+                                </tbody>
+                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center;vertical-align:middle;" width="45px"><input id="checkAll" type="checkbox" ></th>
+                                        <th>分类名称</th>
+                                        <th>APPID</th>
+                                        <th>APP名称</th>
+										<th>包名</th>
+										<th>Logo</th>
+										<th>搜索关键词</th>
+										<th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% for node in object_result.object_list %}
+                                        <tr id="tr_id_{{ node.id }}">
+
+                                            <td style="text-align: center;vertical-align:middle;"><input id="inputCheckbox{{ node.appid }}" type="checkbox" name="checkbox" value="{{ node.appid }}" /></td>
+                                            <td><span class="badge">{{ node.classid|show_name|safe }}</span></td>
+											<td>{{ node.appid }}</td>
+                                            <td>{{ node.appname }}</td>
+                                            <td>{{ node.appfolder }}</td>
+                                            <td>{{ node.applogo }}</td>
+                                            <td>{{ node.appsearch }}</td>
+											<td>
+												<a href="#" onclick="del_user('{{ node.appid }}', '/Shop/delapk')"> <li title="删除" class="glyphicon glyphicon-trash"></li></a>&nbsp; 
+												<a onclick="show_md('{{ node.appid }}')"> <li title="修改" class="glyphicon glyphicon-cog" style="cursor:pointer"></li></a>&nbsp;
+												<a data-toggle="modal" onclick="checkflag('upapp','{{ node.appid }}','{{ node.appname}}')" data-target="#show_upfile" class="glyphicon glyphicon-circle-arrow-up" title="上传APK"></a>&nbsp;
+												<a data-toggle="modal" onclick="checkflag('uplogo','{{ node.appid }}','{{ node.appname}}')" data-target="#show_upfile" class="glyphicon glyphicon-picture" title="上传LOGO"></a>&nbsp;
+												<a data-toggle="modal" onclick="checkflag('uppic','{{ node.appid }}','{{ node.appname}}')" data-target="#show_upfile" class="glyphicon glyphicon-th-large" title="上传详细图片"></a>&nbsp;
+											</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </table>
+<div class="modal fade" id="show_upfile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-center modal-sm">
+  <div class="modal-content">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        &nbsp;<span id="appname2"> 上传文件</span>
+    </div>
+            <input type="hidden" name="flag" id="upflag"> 
+    <div class="modal-body">
+    <table class="table" id="data_tb">
+    <tr>
+        <td><input type='file' name='upfile' id="ss"/></td>
+    </tr>
+    </table>
+    <button class="btn btn-info" type="submit" name="_create" id="sub">提交文件</button>
+    </div>
+
+    <div class="modal-footer">
+        copyright Joybig
+    </div>
+</div>
+</div>
+</div>
+                                {% include "sysBase/pagination.html" %}
+                            </div><!-- /.box-body -->
+                            <div style="height:15px;"></div>
+                        </div><!-- /.box -->
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+
+
+            </section><!-- /.content -->
+<div class="modal" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="exampleModalLabel">APP管理</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 box box-success">
+                                    <form id="data_tb2" class="form-horizontal highlight" role="form"  style="width:800px; margin-top: 10px;"  onsubmit="return false">
+
+                                            <div class="form-group">
+                     							<label for="" class="col-sm-2 control-label">APPID</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appid" id="appid" class="form-control input-sm"  style="width:100px;" check-type="required" required-message="请填写APPID。">
+                                                    <p class="help-block"><li  class="glyphicon glyphicon-info-sign"></li>&nbsp;APPID必须唯一!</p>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">APP名称</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appname" id="appname" class="form-control input-sm"  placeholder="APP名称" style="width:300px;" check-type="required">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">APP包名</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appfolder" id="appfolder" class="form-control input-sm"  style="width:200px;" check-type="required" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">分类ID</label>
+                                                <div class="col-sm-10">
+                                                    <!--<input type="text" name="classid" id="classid" class="form-control input-sm" check-type="required"  style="width:200px;"> -->
+                                                   <select  name="classid" id="classid" style="height:34px;width:200px">
+ 													{% for row in classinfo %}
+                                                     <option value="{{row.classid}}">{{row.classname}}</option>
+                                                  {% endfor %}
+                                                   </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">缩略图下载地址</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="applogo" id="applogo" class="form-control input-sm" check-type="mail required"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">详情图下载地址</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="mainpic" id="mainpic" class="form-control input-sm" check-type="mail required"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">搜索关键字</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appsearch" id="appsearch" class="form-control input-sm" check-type="number"  style="width:200px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">上传时间</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="uptime" id="uptime" class="form-control input-sm" check-type="number"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">描述</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appdesc" id="appdesc" class="form-control input-sm" check-type="number"  style="width:200px;">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">版本号</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="version" id="version" class="form-control input-sm" check-type="number"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">下载地址</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="downloadurl" id="downloadurl" class="form-control input-sm" check-type="number"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">大小</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="appsize" id="appsize" class="form-control input-sm" check-type="number"  style="width:200px;" disabled="true ">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="" class="col-sm-2 control-label">评级</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="level" id="level" class="form-control input-sm" check-type="number"  style="width:200px;">
+                                                </div>
+                                            </div>
+                                            <input style="display:none;" type="text"  name="action" id="action" value="add">
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <button type="submit" id="sub2" class="btn btn-primary btn-sm"><li class="glyphicon glyphicon-plus"></li>&nbsp;确认</button>
+                                                </div>
+                                            </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.content-wrapper -->
+
+        <!-- 工具条切换风格 -->
+        {% include "sysBase/sidebar.html" %}
+        <div class='control-sidebar-bg'></div>
+    </div><!-- ./wrapper -->
+
+
+{% endblock %}
+{% block js_append %}
+    <script type="text/javascript">
+//         alert(M.get("status"));
+         
+
+         var flag;
+         var appid;
+         var appname;
+         $("#sub2").click(function(){
+             	var data=$("#data_tb2").Data();
+ 				var url="/Shop/Store_index/";
+                console.log(data);
+ 				$.post(url,data,function(d){
+                if(d=="ok"){
+                  alert("成功!")
+                location.reload()
+				}else{
+                  alert(d);
+                }
+                })    
+		
+			});
+         function checkflag(str,id,appname){
+              flag=str;
+              appid=id;
+              appname=appname;
+              var change={
+                 upapp:"上传APK",
+                 uplogo:"上传缩略图",
+                 uppic:"上传详细图",
+              }
+                $("#appname2").html(appname+"_"+change[flag]);
+         }
+         $("#sub").click(function(){
+            var data=$('#data_tb').Data();
+            data.flag=flag;
+            data.appid=appid;
+            console.log(data)
+            sub(data);
+         });
+         function sub(param_data){
+            console.log(param_data)
+            var url="/Shop/upapk";
+            $.ajaxFileUpload({
+		    url:url,
+			secureuri:false,
+			data:param_data,
+			fileElementId:'ss',
+            type:"post",
+			dataType:'text',
+			success:function(d){
+                if(d=="ok"){
+                  alert("成功!")
+                location.reload()
+				}else{
+                  alert(d);
+                }
+
+			}
+	       });
+        }
+        $("#show_add_data").click(function(){
+            $('#showModal [name]').val("");
+            $('#action').val('add')
+            $('#showModal').modal('show')
+        });
+        function show_md(pk){
+            $('#action').val('md')
+            $.post('/Shop/show_md_data/', {
+                pk:pk,
+            }, function (e) {
+                var dataObj=eval("("+e+")");
+                var fields = ['appid','appfolder','classid','appname','applogo','appsearch','uptime','appdesc','version','downloadurl','appsize','level','mainpic'];
+                $.each(fields, function(n,value) {
+                    $('#' + value).val(dataObj[0]['fields'][value])
+                });
+                $("#classid option[value="+dataObj[0]['fields']['classid']+"]").attr("select","true");
+                $('#showModal').modal('show')
+            });
+        }
+
+    </script>
+{% endblock %}

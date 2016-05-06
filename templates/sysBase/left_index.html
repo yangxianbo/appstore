@@ -1,0 +1,37 @@
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="treeview active">
+                <a href="#">
+                    <i class="fa fa-user"></i> <span>用户组</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+
+                    <li {% if '/user/user_index/' == request.path  %}class="active"{% endif  %}><a href="/user/user_index/"><i class="fa fa-angle-double-right"></i> 用户管理</a></li>
+                    <li {% if '/user/group_index/' == request.path  %}class="active"{% endif  %}><a href="/user/group_index/"><i class="fa fa-angle-double-right"></i> 组管理</a></li>
+                </ul>
+            </li>
+
+			<li class="treeview active">
+				<a href="#">
+					<i class="fa fa-fw fa-desktop"></i> <span>APP管理</span> <i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li {% if '/Shop/Store_index/' == request.path  %}class="active"{% endif  %}><a href="/Shop/Store_index/"><i class="fa fa-angle-double-right"></i> APP上传管理</a></li>
+					<li {% if '/Shop/Class_index/' == request.path  %}class="active"{% endif  %}><a href="/Shop/Class_index/"><i class="fa fa-angle-double-right"></i> 分类管理</a></li>
+				</ul>
+			</li>
+
+        </ul>
+
+
+
+
+    </section>
+    <!-- /.sidebar -->
+</aside>
